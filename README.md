@@ -38,6 +38,17 @@ pnpm start         # serve the production build
 `GET /api/health` returns `{"status":"ok"}`. It is a liveness check only: it touches no
 database, provider, or environment variable, so it works with no `.env` file.
 
+**Rendering model**
+
+`next.config.ts` deliberately enables `cacheComponents` and `partialPrefetching`.
+This opts the entire app into Next.js Cache Components rendering: later database
+reads and request-specific `cookies()` / `headers()` access must sit behind a
+`Suspense` boundary, while reusable data must be explicitly cached with an
+appropriate lifetime. Never put session-specific data in a shared cache. The
+schema (#4), authentication (#8), and catalog API (#13) work must account for
+these semantics rather than assuming the older App Router defaults. The scaffold
+itself serves only static content and a dependency-free health route.
+
 **Repository layout**
 
 | Path | Purpose |
