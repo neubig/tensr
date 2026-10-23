@@ -8,7 +8,8 @@ you match — and the model can chat with you in character.
 
 This repository is at the **planning / pre-alpha** stage. This README is the product
 plan; the implementation backlog lives in [Issues](../../issues) and is organized into
-the milestones below.
+the milestones below. The target user, personas, tone, non-goals, and success metrics
+live in the [product spec](docs/product-spec.md).
 
 ---
 
