@@ -74,17 +74,36 @@ budgets (#36), landing-page copy (#35), and the moderation console (#30).
 ## 6. Success metrics
 
 Measured from the #31 funnel dashboard once it exists; until then the same definitions are queried
-in SQL over `events`, `swipes`, `matches`, and `messages`. Cohorts are activated users by UTC
+in SQL over a minimal first-party event ledger, `swipes`, `matches`, and `messages`. Cohorts are activated users by UTC
 activation date, excluding internal and test users. Evaluate a target only at n ≥ 100 users in the
 cohort; otherwise report raw counts and mark it inconclusive.
 
 | Metric | Definition | Source |
 | --- | --- | --- |
-| **Activation** | Share of new user sessions that complete onboarding (display name set) **and** render ≥1 deck card in that session. Guests count; signup alone is not activation. | events (#16, #31) |
-| **Swipe-through rate** | Card decisions (like/pass/super-like) ÷ first-time card impressions. An undone and re-decided card counts once; re-served cards add no impressions. | swipes, impressions (#16) |
+| **Activation** | Share of new user sessions that complete onboarding (display name set) **and** render ≥1 deck card in that session. Guests count; signup alone is not activation. | Interim onboarding-complete and deck-card-impression ledger (see below); #31 later consumes it. |
+| **Swipe-through rate** | Card decisions (like/pass/super-like) ÷ first-time card impressions. An undone and re-decided card counts once; re-served cards add no impressions. | swipes (#16), interim deck-card-impression ledger (see below) |
 | **Match rate** | Matches created ÷ right and super-likes. Unit is the like, not the user. Tuning band **30–45%** (#18); outside 20–60% for 7 days is a guardrail breach. | matches, swipes (#18) |
 | **Chat starts** | Share of new matches with ≥1 user message within 24 h of match creation. | messages (#20) |
-| **D1 / D7 retention** | Share of activated users with ≥1 event on the calendar day (UTC) 1 or 7 days after activation day. Point-in-time, not a window. | events (#31) |
+| **D1 / D7 retention** | Share of activated users with ≥1 event on the calendar day (UTC) 1 or 7 days after activation day. Point-in-time, not a window. | Interim session-active ledger (see below); #31 later consumes it. |
+
+### Interim measurement prerequisite
+
+Before M1 beta, provide a minimal first-party ledger with typed `session_active`,
+`onboarding_complete`, and `deck_card_impression` records. Store only a pseudonymous user ID,
+session ID, UTC timestamp, event name, and (for an impression) catalog model ID; never profile
+text, messages, or email. Record `session_active` once per user session, `onboarding_complete`
+after the successful final profile save, and an impression when a loaded top deck card first
+renders. Deduplicate impressions by user and model so undo and re-serving do not increase the
+swipe-through denominator. Activation joins completion and a card render within the same session;
+retention uses session activity on the specified later UTC day.
+
+This is an explicit prerequisite, not instrumentation already delivered by #10, #15, #16, or
+#31. @neubig owns arranging the interim ledger and integration at #8's session entry point,
+#10's successful completion, and #15's card render before M1 beta. Their current scopes exclude
+analytics, so those issue scopes must be updated or separate implementation work agreed before
+claiming this prerequisite complete. #31 still owns the later dashboard and broader taxonomy.
+Until these emitters are implemented and verified with a real session, activation, swipe-through,
+and retention targets are **not measurable**; seeded queries alone do not satisfy M1 readiness.
 
 **M0 is deliberately not applicable to funnel metrics:** there is no user-facing surface, so every
 denominator is zero. M0 is measured by readiness instead — all five funnel steps have a trigger,
@@ -112,7 +131,7 @@ owner and a written response.
 
 | Guardrail | Threshold and intent | Response |
 | --- | --- | --- |
-| **Inference cost per DAU** | 7-day inference spend (provider invoices + amortized local GPU) ÷ 7-day active users. Target ≤ $0.15/DAU at M2, ≤ $0.10 at M4. Alert at > $0.20 for 3 days or any day > $0.30. | Owner #25: inspect cost per model, trim context/output tokens, lower per-user budgets, pause the priciest model. #25's global hard stop stays authoritative. |
+| **Inference cost per DAU** | 7-day inference spend (provider invoices + amortized local GPU) ÷ the sum of daily active-user counts over those same 7 UTC days (user-days, not weekly unique users). A user active on 3 days contributes 3 user-days; a zero denominator is n/a. Target ≤ $0.15/DAU at M2, ≤ $0.10 at M4. Alert at > $0.20 for 3 days or any day > $0.30 (that day’s spend ÷ that day’s DAU). | Owner #25: inspect cost per model, trim context/output tokens, lower per-user budgets, pause the priciest model. #25's global hard stop stays authoritative. |
 | **Report rate** | Reports per 1,000 assistant messages, 7-day rolling. Target < 5; alert > 10, and any credible severe-harm report alerts immediately. | Owner #23: review the transcript, tighten moderation thresholds, suspend the persona if warranted, log it in §9. |
 | **Match-rate collapse** | Outside 20–60% over 7 days, or a 10-point week-over-week drop. | Owner #18: check simulated preference profiles and retune to the 30–45% band. |
 | **Chat failure rate** | > 2% of send or stream attempts fail. | Owner #20: check provider status, retries, limits; show honest error copy, not fake in-character errors. |
@@ -139,7 +158,8 @@ owner and a written response.
 | 2026-10-23 | Match rate is tuned to 30–45% of likes/super-likes. | Enough matches to feel wanted, not so many they feel cheap. #18 tunes to this. |
 | 2026-10-23 | No account required for the core loop; email only preserves progress. | Onboarding friction is the top activation risk (#8). |
 | 2026-10-23 | All profiles are labeled AI; no human characters or human-to-human DMs. | "Honest about AI" is a product principle, not an option. |
-| 2026-10-23 | Measure from application tables until #31 ships. | Avoids blocking M1–M3 on instrumentation. |
+| 2026-10-23 | Require the interim session/onboarding/card-impression ledger before M1 beta; query it and application tables until #31 ships. | Makes early activation and retention measurable without claiming excluded analytics work is already owned or implemented. |
+| 2026-10-23 | Cost per DAU uses user-days over the spend window, not weekly unique users. | Keeps cost thresholds in dollars per active-user day. |
 | 2026-10-23 | The §5 non-goals are binding for v1; adding one requires an entry here. | Keeps scope creep reviewable. |
 
 **Changing this document:** open a PR, add a dated decisions-log row for anything that changes
