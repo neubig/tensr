@@ -186,6 +186,77 @@ criteria, dependencies, and size/area labels.
 - **M3 — Discovery** — trend ingestion, recommender v2, leaderboard, sharing, admin.
 - **M4 — Launch** — analytics, accessibility, E2E, deployment, landing page, docs.
 
+<!-- backlog-index:start -->
+
+<details>
+<summary><strong>M0 — Foundations</strong> — 7 issues</summary>
+
+- [#1](https://github.com/neubig/tensr/issues/1) — Write the product spec, personas, and success metrics
+- [#2](https://github.com/neubig/tensr/issues/2) — Scaffold the Next.js app and repository structure
+- [#3](https://github.com/neubig/tensr/issues/3) — Add CI for lint, typecheck, and unit tests
+- [#4](https://github.com/neubig/tensr/issues/4) — Define the database schema and Prisma migrations
+- [#5](https://github.com/neubig/tensr/issues/5) — Establish the visual identity and UI primitives
+- [#6](https://github.com/neubig/tensr/issues/6) — Set up local development with Postgres, env template, and seed command
+- [#7](https://github.com/neubig/tensr/issues/7) — Define the model catalog data format and loader
+
+</details>
+
+<details>
+<summary><strong>M1 — MVP: profile → swipe → match</strong> — 12 issues</summary>
+
+- [#8](https://github.com/neubig/tensr/issues/8) — Implement guest sessions and email magic-link auth
+- [#9](https://github.com/neubig/tensr/issues/9) — Add profile and preference CRUD APIs with validation
+- [#10](https://github.com/neubig/tensr/issues/10) — Build the multi-step onboarding wizard
+- [#11](https://github.com/neubig/tensr/issues/11) — Add avatar upload and generated-avatar fallback
+- [#12](https://github.com/neubig/tensr/issues/12) — Curate the initial dataset of 50+ recently popular models
+- [#13](https://github.com/neubig/tensr/issues/13) — Build the model catalog API (list, search, filter, detail)
+- [#14](https://github.com/neubig/tensr/issues/14) — Build the model profile detail page
+- [#15](https://github.com/neubig/tensr/issues/15) — Build the swipe deck with gestures and keyboard support
+- [#16](https://github.com/neubig/tensr/issues/16) — Persist swipes with undo and daily limits
+- [#17](https://github.com/neubig/tensr/issues/17) — Implement recommendation v1 with explanations
+- [#18](https://github.com/neubig/tensr/issues/18) — Implement match logic and the matches list
+- [#19](https://github.com/neubig/tensr/issues/19) — Build the 'It's a match' celebration screen
+
+</details>
+
+<details>
+<summary><strong>M2 — Chat, accounts & safety</strong> — 6 issues</summary>
+
+- [#20](https://github.com/neubig/tensr/issues/20) — Build streaming chat APIs with persistence
+- [#21](https://github.com/neubig/tensr/issues/21) — Build the chat interface with history and starters
+- [#22](https://github.com/neubig/tensr/issues/22) — Write per-model persona prompts and conversation starters
+- [#23](https://github.com/neubig/tensr/issues/23) — Add chat moderation, AI disclosure, and report/block flows
+- [#24](https://github.com/neubig/tensr/issues/24) — Build account settings: edit profile, export, delete
+- [#25](https://github.com/neubig/tensr/issues/25) — Add inference spend caps and provider rate limiting
+
+</details>
+
+<details>
+<summary><strong>M3 — Discovery & quality</strong> — 5 issues</summary>
+
+- [#26](https://github.com/neubig/tensr/issues/26) — Build the popularity and release-signal ingestion job
+- [#27](https://github.com/neubig/tensr/issues/27) — Learn from swipe history and tune diversity/exploration
+- [#28](https://github.com/neubig/tensr/issues/28) — Add most-liked leaderboard and model of the day
+- [#29](https://github.com/neubig/tensr/issues/29) — Generate shareable match cards with Open Graph images
+- [#30](https://github.com/neubig/tensr/issues/30) — Build an admin catalog and moderation console
+
+</details>
+
+<details>
+<summary><strong>M4 — Launch</strong> — 7 issues</summary>
+
+- [#31](https://github.com/neubig/tensr/issues/31) — Instrument analytics events and a funnel dashboard
+- [#32](https://github.com/neubig/tensr/issues/32) — Run accessibility and responsive audits and fix findings
+- [#33](https://github.com/neubig/tensr/issues/33) — Add Playwright E2E coverage for the core loop
+- [#34](https://github.com/neubig/tensr/issues/34) — Deploy to production with monitoring and error tracking
+- [#35](https://github.com/neubig/tensr/issues/35) — Build the landing page with SEO and social previews
+- [#36](https://github.com/neubig/tensr/issues/36) — Set and enforce performance budgets
+- [#37](https://github.com/neubig/tensr/issues/37) — Add contributor docs, issue templates, and CONTRIBUTING
+
+</details>
+
+<!-- backlog-index:end -->
+
 New contributors: start with issues labeled [`good first issue`](../../labels/good%20first%20issue).
 
 ---
