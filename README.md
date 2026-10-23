@@ -12,6 +12,48 @@ the milestones below.
 
 ---
 
+## Local development
+
+The app is a single Next.js (App Router) + TypeScript project.
+
+**Requirements**
+
+- Node.js **24 LTS** (`.nvmrc`; the `engines` field requires `>=22`)
+- pnpm **10.13.1** (pinned through the `packageManager` field; `corepack enable` picks
+  it up automatically)
+
+**Commands**
+
+```bash
+pnpm install       # install dependencies from the committed lockfile
+cp .env.example .env.local   # optional for the scaffold; fill in local values
+pnpm dev           # dev server at http://localhost:3000
+pnpm lint          # ESLint
+pnpm typecheck     # TypeScript, strict mode
+pnpm format:check  # Prettier check (`pnpm format` writes fixes)
+pnpm build         # production build
+pnpm start         # serve the production build
+```
+
+`GET /api/health` returns `{"status":"ok"}`. It is a liveness check only: it touches no
+database, provider, or environment variable, so it works with no `.env` file.
+
+**Repository layout**
+
+| Path | Purpose |
+| --- | --- |
+| `app/` | App Router routes, layouts, and route handlers |
+| `components/` | React components |
+| `lib/` | Shared client-safe helpers and config |
+| `server/` | Server-only modules (data access, provider adapters) |
+| `prisma/` | Prisma schema and migrations |
+| `seed/` | Model catalog seed data and loaders |
+| `tests/` | Unit and integration tests |
+
+Never commit real secrets. `.env*` is ignored; only `.env.example` is tracked.
+
+---
+
 ## The core loop
 
 1. **Onboard (≈2 min).** Pick a name and avatar, write a short bio, and choose what you
